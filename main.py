@@ -1,3 +1,4 @@
+"""
 ###############################################################
 #
 # Author: Gelu Liuta
@@ -7,6 +8,7 @@
 # The code is MVP (minimal viable product) for Windows file share observability and should be used accordingly
 # Core components: python libraries (os, heapq, time) and the prometheus instrumentation library prometheus_client
 ###############################################################
+"""
 
 import os
 import heapq
@@ -39,14 +41,13 @@ def collect_metrics(fileSharePath):
     time.sleep(5)
 
 
-# a python function to collect the metrics for total number of files and directories in a file share path
 def count_files_and_directories(fileSharePath):
-
-    # total_number_kpis[] = an array to collect the total number of files and directories in the target file shared defined by the
-    # function parameter fileSharePath
-    # index 0 = total number of directories
-    # index 1 = total number of files
-    # index 2 = total number of files and directories
+    """a python function to collect the metrics for total number of files and directories in a file share path
+        total_number_kpis[] = an array to collect the total number of files and directories in the target file shared defined by the
+        function parameter fileSharePath
+        index 0 = total number of directories
+        index 1 = total number of files
+        index 2 = total number of files and directories"""
 
     total_number_kpis = [0,0,0]
 
@@ -61,8 +62,10 @@ def count_files_and_directories(fileSharePath):
 
     return total_number_kpis
 
-# a python function to collect the metrics for file share path in Bytes
+
 def folder_size(fileSharePath):
+    """ a python function to collect the metrics for file share path in Bytes
+    """
 
     fileShare_size = 0
 
@@ -78,11 +81,12 @@ def folder_size(fileSharePath):
 
     return fileShare_size
 
-# a python function to identify the oldest file in the file share
-# a file filter can be defined with the function parameter extension: for example extension=".sql"
-# if no file filter is wanted, use the parameter extension=""
 
 def oldest_file_in_tree(fileSharePath, count=1, extension=""):
+    """" a python function to identify the oldest file in the file share
+        a file filter can be defined with the function parameter extension: for example extension=".sql"
+        if no file filter is wanted, use the parameter extension="""
+
     return heapq.nsmallest(count,
         (os.path.join(dirname, filename)
         for dirname, dirnames, filenames in os.walk(fileSharePath)
@@ -90,11 +94,12 @@ def oldest_file_in_tree(fileSharePath, count=1, extension=""):
         if filename.endswith(extension)),
         key=lambda fn: os.stat(fn).st_mtime)
 
-# a python function to identify the oldest file in the file share
-# a file filter can be defined with the function parameter extension: for example extension=".sql"
-# if no file filter is wanted, use the parameter extension=""
 
 def newest_file_in_tree(fileSharePath, count=1, extension=""):
+    """ a python function to identify the oldest file in the file share
+        a file filter can be defined with the function parameter extension: for example extension=".sql"
+        if no file filter is wanted, use the parameter extension="""
+
     return heapq.nlargest(count,
         (os.path.join(dirname, filename)
         for dirname, dirnames, filenames in os.walk(fileSharePath)
@@ -119,7 +124,7 @@ if __name__ == '__main__':
     print("Die älteste Datei in dem FileShare ist: " + str(oldest_file_in_tree(r"\\domoff.local\dml\Software\Test_GeluLiuta")))
     print("Die neueste Datei in dem FileShare ist: " + str(newest_file_in_tree(r"\\domoff.local\dml\Software\Test_GeluLiuta")))
 
-    # Export to Prometheus with
+    # Prometheus agent
 
     start_http_server(8000)
     while True:
