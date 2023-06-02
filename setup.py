@@ -7,8 +7,6 @@ setup(
     author="Gelu Liuta",
     author_email="gelu.liuta@gmail.com",
     packages=find_packages("src"),
-    package_dir={"":"src"},
-    install_requires=[
-        'prometheus_client'
-    ]
+    package_dir={"":"src"}
+    #install_requires=['prometheus_client']
 )
