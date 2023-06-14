@@ -7,6 +7,7 @@
 #
 # The code is MVP (minimal viable product) for Windows file share observability and should be used accordingly
 # Core components: python libraries (os, heapq, time) and the prometheus instrumentation library prometheus_client
+# This module doesn't have the classes for the windows service
 ###############################################################
 """
 
@@ -111,18 +112,32 @@ def newest_file_in_tree(fileSharePath, count=1, extension=""):
 if __name__ == '__main__':
 
     # A console print for test purposes, the section can be commented out, it has no impact on the
-    print ("Die überwachte FileShare ist: "+ r"\\domoff.local\dml\Software\Test_GeluLiuta")
+    # print ("Die überwachte FileShare ist: "+ r"\\domoff.local\dml\Software\Test_GeluLiuta")
+    #
+    # kpis= count_files_and_directories(r"\\domoff.local\dml\Software\Test_GeluLiuta")
+    #
+    # print("Anzahl Ordner: " + str(kpis[0]))
+    # print("Anzahl Dateien: " + str(kpis[1]))
+    # print("Anzahl Ordner + Dateien: " + str(kpis[2]))
+    #
+    # print ("FileShare Grösse in Bytes: " + str(folder_size(r"\\domoff.local\dml\Software\Test_GeluLiuta")) + " Bytes")
+    #
+    # print("Die älteste Datei in dem FileShare ist: " + str(oldest_file_in_tree(r"\\domoff.local\dml\Software\Test_GeluLiuta")))
+    # print("Die neueste Datei in dem FileShare ist: " + str(newest_file_in_tree(r"\\domoff.local\dml\Software\Test_GeluLiuta")))
 
-    kpis= count_files_and_directories(r"\\domoff.local\dml\Software\Test_GeluLiuta")
+
+    print ("Die überwachte FileShare ist: "+ r"\\domoff.local\org\CS-ES-R-AUSWERTUNG")
+
+    kpis= count_files_and_directories(r"\\domoff.local\org\CS-ES-R-AUSWERTUNG")
 
     print("Anzahl Ordner: " + str(kpis[0]))
     print("Anzahl Dateien: " + str(kpis[1]))
     print("Anzahl Ordner + Dateien: " + str(kpis[2]))
 
-    print ("FileShare Grösse in Bytes: " + str(folder_size(r"\\domoff.local\dml\Software\Test_GeluLiuta")) + " Bytes")
+    print ("FileShare Grösse in Bytes: " + str(folder_size(r"\\domoff.local\org\CS-ES-R-AUSWERTUNG")) + " Bytes")
 
-    print("Die älteste Datei in dem FileShare ist: " + str(oldest_file_in_tree(r"\\domoff.local\dml\Software\Test_GeluLiuta")))
-    print("Die neueste Datei in dem FileShare ist: " + str(newest_file_in_tree(r"\\domoff.local\dml\Software\Test_GeluLiuta")))
+    print("Die älteste Datei in dem FileShare ist: " + str(oldest_file_in_tree(r"\\domoff.local\org\CS-ES-R-AUSWERTUNG")))
+    print("Die neueste Datei in dem FileShare ist: " + str(newest_file_in_tree(r"\\domoff.local\org\CS-ES-R-AUSWERTUNG")))
 
     # Prometheus agent
 
