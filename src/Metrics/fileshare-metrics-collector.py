@@ -16,9 +16,7 @@ import sys
 import time
 
 import socket
-
 import win32serviceutil
-
 import servicemanager
 import win32event
 import win32service
