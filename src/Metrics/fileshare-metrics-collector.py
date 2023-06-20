@@ -38,13 +38,13 @@ FILESHARE_SIZE = Gauge('fileshare_size', 'The size of the fileshare')
 def collect_metrics(fileSharePath):
 
     kpis = count_files_and_directories(fileSharePath)
-    fileshareSize = folder_size(fileSharePath)
+    size_fileShare = folder_size(fileSharePath)
 
     NUMBER_FILES_IN_SHARE.set(kpis[1])
     NUMBER_DIRECTORIES_IN_SHARE.set(kpis[0])
-    FILESHARE_SIZE.set(fileshareSize)
+    FILESHARE_SIZE.set(size_fileShare)
 
-    time.sleep(30)
+    time.sleep(60)
 
 
 def count_files_and_directories(fileSharePath):
@@ -58,12 +58,17 @@ def count_files_and_directories(fileSharePath):
 
     total_number_kpis = [0,0,0]
 
-    for base, dirs, files in os.walk(fileSharePath):
+    for base, dirs, files in os.walk(fileSharePath, topdown=True, onerror=None):
         # print('Searching in : ',base)
-        for directories in dirs:
-            total_number_kpis[0] += 1
-        for Files in files:
-            total_number_kpis[1] += 1
+        # for directories in dirs:
+        #     total_number_kpis[0] += 1
+        # for Files in files:
+        #     total_number_kpis[1] += 1
+
+        # for directories in dirs:
+        total_number_kpis[0] += len(dirs)
+        # for Files in files:
+        total_number_kpis[1] += len(files)
 
     total_number_kpis[2]=total_number_kpis[0]+total_number_kpis[1]
 
@@ -122,13 +127,18 @@ class FileShareObserverService:
 
     def run(self):
         """Main service loop. This is where work is done!"""
-        self.running = True
-        while self.running:
-            # time.sleep(10)  # Important work
-            servicemanager.LogInfoMsg("Service running...")
+        # self.running = True
+        # while self.running:
+        #     #time.sleep(10)  # Important work
+        #     #servicemanager.LogInfoMsg("Service running...")
+        #
+        #     # business logic must be implemented in this section
+        #     collect_metrics(r"\\domoff.local\dml\Software\Test_GeluLiuta")
 
-            # business logic must be implemented in this section
+        self.running = True
+        while True:
             collect_metrics(r"\\domoff.local\dml\Software\Test_GeluLiuta")
+
 
 class GenericWindowsService(win32serviceutil.ServiceFramework):
     """
@@ -190,17 +200,17 @@ if __name__ == '__main__':
     # while True:
     #     collect_metrics(r"\\domoff.local\dml\Software\Test_GeluLiuta")
 
-    '''
-    
+    '''    
     start the python module as a Windows service
     this is a standard code to initialize the service
-    before initializing the service the http server for prometheus must be started, using a custom port
-    
+    before initializing the service the http server for prometheus must be started, using a custom port    
     '''
+    start_http_server(8001)
+
     if len(sys.argv) == 1:
-        start_http_server(8001)
         servicemanager.Initialize()
         servicemanager.PrepareToHostSingle(GenericWindowsService)
         servicemanager.StartServiceCtrlDispatcher()
     else:
         win32serviceutil.HandleCommandLine(GenericWindowsService)
+        

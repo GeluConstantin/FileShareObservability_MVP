@@ -39,7 +39,7 @@ def collect_metrics(fileSharePath):
     NUMBER_DIRECTORIES_IN_SHARE.set(kpis[0])
     FILESHARE_SIZE.set(fileshareSize)
 
-    time.sleep(5)
+    time.sleep(30)
 
 
 def count_files_and_directories(fileSharePath):
@@ -54,10 +54,10 @@ def count_files_and_directories(fileSharePath):
 
     for base, dirs, files in os.walk(fileSharePath):
         # print('Searching in : ',base)
-        for directories in dirs:
-            total_number_kpis[0] += 1
-        for Files in files:
-            total_number_kpis[1] += 1
+        # for directories in dirs:
+        total_number_kpis[0] += len(dirs)
+        # for Files in files:
+        total_number_kpis[1] += len(files)
 
     total_number_kpis[2]=total_number_kpis[0]+total_number_kpis[1]
 
